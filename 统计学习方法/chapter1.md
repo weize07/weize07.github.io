@@ -1,7 +1,3 @@
-<script type="text/javascript"
-   src="../scripts/mathjax.2.7.5.js">
-</script>
-
 ### 第一章 概述
 
 统计学习：基于数据构建概率统计模型，并运用模型对数据进行预测和分析从训练数据集出发；
