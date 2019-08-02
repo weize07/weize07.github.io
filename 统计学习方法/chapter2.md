@@ -24,13 +24,13 @@ $$ L(\vec x_i, y_i)=-\frac{1}{||w||}y_i(\vec w \cdot \vec x_i+b) $$
 
 如果用随机梯度下降法，对于每一个误分类点首先计算梯度：
 
-$ \frac{\partial L}{\partial{\vec w}} = -y_ix_i $
+$ \frac{\partial L}{\partial{\vec w}} = -y_i\vec x_i $
 
 $ \frac{\partial L}{\partial b} = -y_i$
 
 并按照学习率 $ \eta $ 更新梯度:
 
-$ \vec w = \vec w+ \eta y_ix_i$
+$ \vec w = \vec w+ \eta y_i \vec x_i$
 
 $ b = b+ \eta y_i$
 
@@ -42,7 +42,7 @@ $ b = b+ \eta y_i$
 
 - 在训练集中选取数据$ (\vec x_i, y_i) $,若 $ y_i(\vec w \cdot \vec x_i+b)<0 $ 则更新 $ \vec w, b $:
 
-  $ \vec w \leftarrow \vec w+ \eta y_ix_i$
+  $ \vec w \leftarrow \vec w+ \eta y_i \vec x_i$
 
   $ b \leftarrow b+ \eta y_i$
 
@@ -85,3 +85,43 @@ $$
 
 所以,  $ k \le (\frac{R}{\gamma})^2 $
 
+
+
+#### 对偶问题
+
+在原始问题中，在训练集中选取数据$ (\vec x_i, y_i) $, 若 $ y_i(\vec w \cdot \vec x_i+b)<0 $ 则更新 $ \vec w, b $:
+
+$ \vec w \leftarrow \vec w+ \eta y_i\vec x_i$
+
+$ b \leftarrow b+ \eta y_i$
+
+假如，我们用$ \alpha_i $ 代表数据点$ (\vec x_i, y_i) $ 在训练过程中被误分类的次数，那么
+
+$ \vec w = \sum_i \alpha_i \eta y_i\vec x_i$
+
+$b = \sum_i \alpha_i \eta y_i$
+
+那么, 对于一个新的点$ (\vec x_j, y_j) $, 
+$$
+\begin{equation}
+\begin{aligned}
+y_j(\vec w \cdot \vec x_j+b)&=y_j(\sum_i \alpha_i \eta y_i\vec x_i \cdot\vec x_j +b)\\
+&=\sum_i\alpha_i \eta y_iy_j\vec x_i \cdot\vec x_j + y_jb
+\end{aligned}
+\end{equation}
+$$
+因此，如果我们预先算好所有的$ \vec x_i \cdot\vec x_j $并存入矩阵，
+
+每次迭代只需要找到误差点，并且更新对应的 $ \alpha_i=\alpha_i+1 $ 即可。
+
+
+
+**对偶形式的意义 **
+
+特征维度——n，训练集D大小——N
+
+**原始形式每一轮迭代**，计算 $\vec w \cdot \vec x_i $ 和更新梯度 $ \vec w \leftarrow \vec w+ \eta y_i\vec x_i$的**时间复杂度是O(n)**。
+
+而**对偶形式每一轮迭代**，计算$ \sum_{i \in D}\alpha_i \eta y_iy_j\vec x_i \cdot\vec x_j $ , **时间复杂度是O(N)**
+
+因此，对偶形式在数据集小于特征维度的时候，能够起到加速的作用；反之，若特征维度n小于数据集大小N，则原始形式更快。
