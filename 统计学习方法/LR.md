@@ -35,11 +35,11 @@ sigmoid图形：
 
 ![](./images/sigmoid.png)
 
-所以，sigmoid起到的作用就是，把$ \vec w \cdot \vec x+b $ 映射到了(0,1)区间。
+所以，sigmoid起到的作用就是，把$ \vec w \cdot \vec x+b $ 从$ (-\infin,+\infin) $ 映射到了(0,1)区间。
 
 我们可以把$\sigma(\vec w \cdot \vec x_i+b)$ 的值理解为，该样本$ \vec x_i $  属于正样本的概率；
 
-而$ 1-\sigma(\vec w \cdot \vec x_i+b) $ 是该样本属于副样本的概率。
+而$ 1-\sigma(\vec w \cdot \vec x_i+b) $ 是该样本属于负样本的概率。
 
 那么，我们的学习目标就变成了，对于训练集 $\mathbb D $ 中样本正负标签出现的概率尽可能大，即似然函数：
 $$
@@ -57,3 +57,18 @@ L(\vec w, b) &= log(Likelihood) \\
 \end{equation}
 $$
 使用梯度下降法更新参数$ \vec w, b $。
+$$
+\begin{equation}
+\begin{aligned}
+\nabla_{w_i} &= \sum_{i=1}^{N}(-y_i\vec x_i+\vec x_i-(1-\sigma(\vec w \cdot \vec x_i+b))\vec x_i)\\
+							&= \sum_{i=1}^{N}(\sigma(\vec w\cdot \vec x_i+b)-y_i)\vec x_i\\
+\nabla_b &= \sum_{i=1}^{N}(1-y_i-(1-\sigma(\vec w \cdot \vec x_i+b)))\\
+					&= \sum_{i=1}^{N}(\sigma(\vec w\cdot \vec x_i+b)-y_i)
+\end{aligned}
+\end{equation}
+$$
+每轮迭代：
+
+$ \vec w_i \leftarrow \vec w_i + \nabla_{w_i} $
+
+$ b \leftarrow b + \nabla_b $
