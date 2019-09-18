@@ -49,9 +49,59 @@ $$
 
 svm对偶问题的提出主要有两个目的：
 
-（1）引入样本间两两内积，从而引出核函数
+（1）引入样本间内积，从而引出核函数
 
 （2）对偶问题往往更容易求解
+
+
+
+构造拉格朗日函数：
+$$
+L(\vec w,b,\vec \alpha) = \frac{1}{2}||w||_2^2-\sum\alpha_i[y_i(\vec w \cdot \vec x_i+b) - 1]
+$$
+原问题是：
+$$
+min_{\vec w, b}max_{\vec \alpha}L(\vec w, b, \vec \alpha)
+$$
+
+
+根据拉格朗日对偶性，对偶问题是：
+$$
+max_{\vec \alpha}min_{\vec w, b}L(\vec w, b, \vec \alpha)
+$$
+
+
+先求极小问题：
+$$
+min_{\vec w, b}L(\vec w, b, \vec \alpha) \\
+\frac{\partial L}{\partial \vec w} = \vec w - \sum\alpha_iy_i\vec x_i = 0 \\
+\frac{\partial L}{\partial b} = -\sum\alpha_iy_i = 0 \\
+\therefore \vec w = \sum\alpha_iy_i\vec x_i, \sum\alpha_iy_i = 0
+$$
+把上式得到 $\vec w, b$ 代入, 
+$$
+L(\vec \alpha) = \frac{1}{2}\sum_i\sum_j\alpha_i\alpha_jy_iy_j \vec x_i \cdot \vec x_j-\sum_i\sum_j\alpha_i\alpha_jy_iy_j \vec x_i \cdot \vec x_j+\sum_i\alpha_i \\
+=-\frac{1}{2}\sum_i\sum_j\alpha_i\alpha_jy_iy_j \vec x_i \cdot \vec x_j+\sum_i\alpha_i
+$$
+再对 $L$ 求极大：
+$$
+max_{\vec \alpha}L(\vec \alpha) \\
+s.t. \sum_i\alpha_iy_i = 0 \\
+\alpha_i \geq 0, i=1,2,...,N
+$$
+该问题的最优解$\vec\alpha^*$，应当满足KKT条件：
+$$
+\vec w^* = \sum\alpha_i^*y_i\vec x_i \\
+\sum\alpha_i^*y_i = 0  \\
+\alpha_i^*[y_i(\vec w \cdot \vec x_i+b) - 1] = 0, i=1,2,...,N \\
+y_i(\vec w \cdot \vec x_i+b) - 1\geq 0, i=1,2,...,N \\
+\alpha_i^* \geq 0
+$$
+如果 $\vec a^*=0$， 那么$ \vec w^*=0 $， 这样会导致分离超平面对于样本没有任何区分能力。因此一定有分量$\alpha_i^* \neq 0$, 那么其对应的 $y_i(\vec w^* \cdot \vec x_i+b^*)-1 = 0$, 那么 $b^*=y_i^*-\vec w^* \cdot \vec x_i$
+
+
+
+#### 核函数
 
 
 
