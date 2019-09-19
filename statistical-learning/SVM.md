@@ -1,4 +1,4 @@
-### 支持向量机
+### 线性可分支持向量机
 
 对于线性可分的训练集，感知机是找到任意一个分离超平面将正负样本分开即可。支持向量机的思路是，不仅将正负样本分开，而且距离超平面最近的样本，要尽量远离超平面。
 
@@ -101,7 +101,77 @@ $$
 
 
 
-#### 核函数
+### 线性支持向量机
+
+上述的线性可分支持向量机，无法处理数据集线性不可分的情况，为此，我们为每个样本引入松弛变量，并对松弛变量加以惩罚。
 
 
 
+#### 问题定义
+
+$$
+min_{\vec w,b}\frac{1}{2}||\vec w||_2^2 + C\sum_i \varepsilon_i\\
+s.t. y_i(\vec w \cdot \vec x_i+b) \geq 1-\varepsilon_i, i=1,2,...,N\\
+\varepsilon_i \geq 0, i=1,2,...,N
+$$
+
+
+
+其中$\varepsilon_i$是松弛变量；$C$ 是惩罚系数，用来调和**间隔最大化**和**误分类惩罚**对于优化目标的重要程度。
+
+
+
+#### 对偶问题
+
+构造拉格朗日函数：
+$$
+L(\vec w, b, \vec \varepsilon, \vec \alpha, \vec \mu) =
+\frac{1}{2}||\vec w||_2^2 + C\sum_i \varepsilon_i - 
+\sum_i\alpha_i[y_i(\vec w \cdot \vec x_i+b)-1+\varepsilon_i] - 
+\sum_i\mu_i\varepsilon_i \\
+s.t. \alpha_i \geq 0, \mu_i \geq 0, \varepsilon_i \geq 0,  i=1,2,...,N
+$$
+
+
+原始问题：
+$$
+min_{\vec w, b, \vec \varepsilon}max_{\vec \alpha, \vec u}L(\vec w, b, \vec \varepsilon, \vec \alpha, \vec \mu)
+$$
+对偶问题：
+$$
+max_{\vec \alpha, \vec u}min_{\vec w, b, \vec \varepsilon}L(\vec w, b, \vec \varepsilon, \vec \alpha, \vec \mu)
+$$
+先对$\vec w, b, \vec \varepsilon$ 求极小：
+$$
+\nabla_{\vec w}L = \vec w-\sum_i\alpha_iy_i\vec x_i = 0 \Rightarrow \vec w = \sum_i\alpha_iy_i\vec x_i\\
+\nabla_{b}L = -\sum_i\alpha_iy_i = 0 \\
+\nabla_{\varepsilon_i} = C - \alpha_i - \mu_i = 0
+$$
+将上面式子代入$L$, 得到：
+$$
+L(\vec w, b, \vec \varepsilon, \vec \alpha, \vec \mu) =
+\frac{1}{2}||\vec w||_2^2 + C\sum_i \varepsilon_i - 
+\sum_i\alpha_i[y_i(\vec w \cdot \vec x_i+b)-1+\varepsilon_i] - 
+\sum_i\mu_i\varepsilon_i \\
+= -\frac{1}{2}\sum_i\sum_j\alpha_i\alpha_jy_iy_j \vec x_i \cdot \vec x_j+\sum_i\alpha_i
+$$
+再对 $\vec \alpha, \vec \mu$ 求极大：
+$$
+max_{\vec \alpha, \vec \mu}-\frac{1}{2}\sum_i\sum_j\alpha_i\alpha_jy_iy_j \vec x_i \cdot \vec x_j+\sum_i\alpha_i \\
+等价于: min_{\vec \alpha}\frac{1}{2}\sum_i\sum_j\alpha_i\alpha_jy_iy_j \vec x_i \cdot \vec x_j+\sum_i\alpha_i\\
+s.t. C \geq \alpha_i \geq 0 \\
+\sum_i\alpha_iy_i = 0 \\
+$$
+最优解$\vec w^*, b^*, \vec \varepsilon^*, \alpha^*, \vec \mu^*$ 应满足KKT条件：
+$$
+\vec w = \sum_i\alpha_iy_i\vec x_i \\
+\sum_i\alpha_iy_i = 0 \\
+C-\alpha_i-\mu_i = 0 \\
+C \geq \alpha_i \geq 0 \\
+\varepsilon_i \geq 0 \\
+\mu_i \geq 0 \\
+\mu_i\varepsilon_i = 0 \\
+\alpha_i[y_i(\vec w \cdot \vec x_i+b)-1+\varepsilon_i] = 0 \\
+y_i(\vec w \cdot \vec x_i+b)-1+\varepsilon_i \geq 0 \\
+i = 1,2,...,N
+$$
