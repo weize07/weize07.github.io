@@ -194,4 +194,10 @@ $$
 
 对偶问题的最优解$\vec \alpha^*=(\alpha_1^*, \alpha_2^*,...,\alpha_N^*)^T$中，大于0的分量 $\alpha_i^*$   对应的样本点$(\vec x_i, y_i)$  的特征向量$\vec x_i$ 被称为支持向量。
 
-其中，
+其中，如果$0<\alpha_i^* < C$, 那么$\mu_i > 0, \varepsilon_i=0$, 所以 $\vec x_i$ 在支持向量边界上。
+
+如果$\alpha_i^*=C$， 那么$\varepsilon_i$ 为任意正数，如果
+
+* 如果$0<\varepsilon_i<1$， 则$\vec x_i$ 在支持向量边界和分离超平面之间，分类正确。
+* 若 $\varepsilon_i=1$，则支持向量落在分离超平面上。
+* 若 $\varepsilon_i>1$，则支持向量落在分离超平面另一侧，分类错误。
