@@ -175,3 +175,23 @@ C \geq \alpha_i \geq 0 \\
 y_i(\vec w \cdot \vec x_i+b)-1+\varepsilon_i \geq 0 \\
 i = 1,2,...,N
 $$
+如果$\vec \alpha = \vec 0$, 那么 $\vec w=\vec 0$， 模型将不具备分类能力，没有意义。
+
+如果$\alpha_i = C, i=1,2,...,N $, 那么$\sum_iy_i = 0$,  这是强加的约束，不符合实际情况。
+
+所以存在$0<\alpha_j<C$， 因此$\mu_j > 0, \varepsilon_j=0$,  那么
+$$
+b^* = y_j-\vec w^*\cdot \vec x_j\\
+=y_i-\sum_i\alpha_i^*y_i(\vec x_i \cdot \vec x_j)
+$$
+那么分离超平面是：$\sum_i\alpha_i^*y_i(\vec x_i \cdot \vec x) + b^* = 0$
+
+决策函数为：$f(\vec x) = sign(\sum_i\alpha_i^*y_i(\vec x_i \cdot \vec x) + b^*)$
+
+
+
+#### 支持向量
+
+对偶问题的最优解$\vec \alpha^*=(\alpha_1^*, \alpha_2^*,...,\alpha_N^*)^T$中，大于0的分量 $\alpha_i^*$   对应的样本点$(\vec x_i, y_i)$  的特征向量$\vec x_i$ 被称为支持向量。
+
+其中，
