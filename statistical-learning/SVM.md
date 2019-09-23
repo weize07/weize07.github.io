@@ -201,3 +201,70 @@ $$
 * 如果$0<\varepsilon_i<1$， 则$\vec x_i$ 在支持向量边界和分离超平面之间，分类正确。
 * 若 $\varepsilon_i=1$，则支持向量落在分离超平面上。
 * 若 $\varepsilon_i>1$，则支持向量落在分离超平面另一侧，分类错误。
+
+
+
+#### 核函数
+
+截至目前，支持向量机只能用于解决线性分类问题，如果我们想要解决非线性问题，就需要用到核函数了。
+
+注意到之前的最优化问题：
+$$
+max_{\vec \alpha, \vec \mu}-\frac{1}{2}\sum_i\sum_j\alpha_i\alpha_jy_iy_j \vec x_i \cdot \vec x_j+\sum_i\alpha_i \\
+等价于: min_{\vec \alpha}\frac{1}{2}\sum_i\sum_j\alpha_i\alpha_jy_iy_j \vec x_i \cdot \vec x_j+\sum_i\alpha_i\\
+s.t. C \geq \alpha_i \geq 0 \\
+\sum_i\alpha_iy_i = 0 \\
+$$
+如果我们用非线性变换$h(\vec x_i)$代替 $\vec x_i$, 那么内积$\vec x_i \cdot \vec x_j$ 就成了$h(\vec x_i) \cdot h(\vec x_j)$。
+
+举个例子，假设$\vec x = (x_1,x_2)^T, h(\vec x)=x_1^2+x_2^2$ ， 那么对于以原点为圆心，任一半径的圆上的点，将在$h(\vec x)$的映射下变得没有区别。两两之间的内积也变得没有区别，跟原始空间里的内积已经不一样了。
+
+当然，一般不会显式定义变换函数，而是用一个核函数$K(\vec x_i, \vec x_j)$来代替内积$\vec x_i \cdot \vec x_j$。
+
+核函数隐式地完成非线性变换，再在变换后的空间中求得两点的内积。
+
+常用的核函数有：
+
+**多项式核函数:** $K(\vec x_i, \vec x_j)=(\vec x_i\cdot\vec x_j + 1)^p $
+
+**高斯e核函数：**$K(\vec x_i, \vec x_j)=exp(-\frac{||\vec x_i-\vec x_j||^2}{2\sigma^2}) $
+
+
+
+用核函数代替了样本内积之后，最优化问题变成了：
+$$
+max_{\vec \alpha, \vec \mu}-\frac{1}{2}\sum_i\sum_j\alpha_i\alpha_jy_iy_j K(\vec x_i , \vec x_j)+\sum_i\alpha_i \\
+等价于: min_{\vec \alpha}\frac{1}{2}\sum_i\sum_j\alpha_i\alpha_jy_iy_j K(\vec x_i , \vec x_j)+\sum_i\alpha_i\\
+s.t. C \geq \alpha_i \geq 0 \\
+\sum_i\alpha_iy_i = 0 \\
+$$
+决策函数变成：$f(\vec x) = sign(\sum_i\alpha_i^*y_iK(\vec x_i , \vec x) + b^*)$
+
+
+
+#### SMO算法
+
+1. 支持向量机的学习问题可以形式化为求解凸二次规划问题。这样的凸二次规划问题具有全局最优解，并且有多种算法可以用于这一问题的求解。
+
+   当训练样本容量非常大时，这些算法往往非常低效。而序列最小最优化(`sequential minimal optimization:SMO`）算法可以高效求解。
+
+2. `SMO`算法的思路：
+
+   - 若所有变量都满足条件，则最优化问题的解就得到了。
+
+   - 否则，选择两个变量的同时固定其他所有变量，针对这两个变量构建一个二次规划子问题。
+
+     - 这个二次规划子问题关于这两个变量的解应该更接近原始二次规划问题的解，因为这会使得原始二次规划问题的目标函数值变得更小。
+
+     - 更重要的是，这个二次规划子问题可以通过解析的方法求解。
+
+     - 此时子问题有两个变量，至少存在一个变量不满足约束条件（否则就是所有变量满足条件了）。
+
+       假设其中一个是违反约束最严重的那个，另一个由约束等式自动确定： 。
+
+3. `SMO` 算法将原始问题不断地分解为子问题并且对子问题求解，进而达到求解原问题的目的。
+
+   整个 `SMO` 算法包括两部分：
+
+   - 求解两个变量二次规划的解析方法。
+   - 选择变量的启发式方法。
