@@ -20,4 +20,5 @@
 
 [逻辑回归](./statistical-learning/LR.html)
 
+[支持向量机](./statistical-learning/LR.html)
 
