@@ -2,7 +2,9 @@
 
 [神经网络](./neural-networks/nn.html)   
 
-[表示学习1](./表示学习1.md)	  
+[表示学习1](./表示学习1.md)	
+
+[词向量之skip-gram](./NLP/skip-gram.html)	
 
 [表示学习2](./表示学习2.md)  
 
