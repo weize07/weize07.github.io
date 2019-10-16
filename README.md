@@ -1,6 +1,8 @@
 ### 随便写写
 
-[神经网络](./neural-networks/nn.html)   
+[神经网络简介](./neural-networks/nn.html) 
+
+[万能的神经网络](./neural-networks/万能的神经网络.mdl)
 
 [表示学习1](./表示学习1.md)	
 
