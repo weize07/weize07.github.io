@@ -4,6 +4,8 @@
 
 [万能的神经网络](./neural-networks/万能的神经网络.md)
 
+[卷积神经网络](./neural-networks/卷积神经网络.md)
+
 [表示学习1](./表示学习1.md)	
 
 [词向量之skip-gram](./NLP/skip-gram.html)	
