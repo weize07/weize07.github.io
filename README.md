@@ -4,7 +4,7 @@
 
 [万能的神经网络](./neural-networks/万能的神经网络.md)
 
-[卷积神经网络](./neural-networks/卷积神经网络.md)
+[卷积神经网络](./neural-networks/卷积神经网络.html)
 
 [表示学习1](./表示学习1.md)	
 

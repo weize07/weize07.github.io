@@ -1,0 +1,518 @@
+<!doctype html>
+<html>
+<head>
+<meta charset='UTF-8'><meta name='viewport' content='width=device-width initial-scale=1'>
+<title>卷积神经网络</title><link href='https://fonts.loli.net/css?family=Open+Sans:400italic,700italic,700,400&subset=latin,latin-ext' rel='stylesheet' type='text/css' /><style type='text/css'>html {overflow-x: initial !important;}:root { --bg-color: #ffffff; --text-color: #333333; --select-text-bg-color: #B5D6FC; --select-text-font-color: auto; --monospace: "Lucida Console",Consolas,"Courier",monospace; }
+html { font-size: 14px; background-color: var(--bg-color); color: var(--text-color); font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; -webkit-font-smoothing: antialiased; }
+body { margin: 0px; padding: 0px; height: auto; bottom: 0px; top: 0px; left: 0px; right: 0px; font-size: 1rem; line-height: 1.42857143; overflow-x: hidden; background-image: inherit; background-size: inherit; background-attachment: inherit; background-origin: inherit; background-clip: inherit; background-color: inherit; tab-size: 4; background-position: inherit inherit; background-repeat: inherit inherit; }
+iframe { margin: auto; }
+a.url { word-break: break-all; }
+a:active, a:hover { outline: 0px; }
+.in-text-selection, ::selection { text-shadow: none; background: var(--select-text-bg-color); color: var(--select-text-font-color); }
+#write { margin: 0px auto; height: auto; width: inherit; word-break: normal; word-wrap: break-word; position: relative; white-space: normal; overflow-x: visible; padding-top: 40px; }
+#write.first-line-indent p { text-indent: 2em; }
+#write.first-line-indent li p, #write.first-line-indent p * { text-indent: 0px; }
+#write.first-line-indent li { margin-left: 2em; }
+.for-image #write { padding-left: 8px; padding-right: 8px; }
+body.typora-export { padding-left: 30px; padding-right: 30px; }
+.typora-export .footnote-line, .typora-export li, .typora-export p { white-space: pre-wrap; }
+@media screen and (max-width: 500px) { 
+  body.typora-export { padding-left: 0px; padding-right: 0px; }
+  #write { padding-left: 20px; padding-right: 20px; }
+  .CodeMirror-sizer { margin-left: 0px !important; }
+  .CodeMirror-gutters { display: none !important; }
+}
+#write li > figure:last-child { margin-bottom: 0.5rem; }
+#write ol, #write ul { position: relative; }
+img { max-width: 100%; vertical-align: middle; }
+button, input, select, textarea { color: inherit; font-family: inherit; font-size: inherit; font-style: inherit; font-variant-caps: inherit; font-weight: inherit; font-stretch: inherit; line-height: inherit; }
+input[type="checkbox"], input[type="radio"] { line-height: normal; padding: 0px; }
+*, ::after, ::before { box-sizing: border-box; }
+#write h1, #write h2, #write h3, #write h4, #write h5, #write h6, #write p, #write pre { width: inherit; }
+#write h1, #write h2, #write h3, #write h4, #write h5, #write h6, #write p { position: relative; }
+p { line-height: inherit; }
+h1, h2, h3, h4, h5, h6 { break-after: avoid-page; break-inside: avoid; orphans: 2; }
+p { orphans: 4; }
+h1 { font-size: 2rem; }
+h2 { font-size: 1.8rem; }
+h3 { font-size: 1.6rem; }
+h4 { font-size: 1.4rem; }
+h5 { font-size: 1.2rem; }
+h6 { font-size: 1rem; }
+.md-math-block, .md-rawblock, h1, h2, h3, h4, h5, h6, p { margin-top: 1rem; margin-bottom: 1rem; }
+.hidden { display: none; }
+.md-blockmeta { color: rgb(204, 204, 204); font-weight: 700; font-style: italic; }
+a { cursor: pointer; }
+sup.md-footnote { padding: 2px 4px; background-color: rgba(238, 238, 238, 0.701961); color: rgb(85, 85, 85); border-top-left-radius: 4px; border-top-right-radius: 4px; border-bottom-right-radius: 4px; border-bottom-left-radius: 4px; cursor: pointer; }
+sup.md-footnote a, sup.md-footnote a:hover { color: inherit; text-transform: inherit; text-decoration: inherit; }
+#write input[type="checkbox"] { cursor: pointer; width: inherit; height: inherit; }
+figure { overflow-x: auto; margin: 1.2em 0px; max-width: calc(100% + 16px); padding: 0px; }
+figure > table { margin: 0px !important; }
+tr { break-inside: avoid; break-after: auto; }
+thead { display: table-header-group; }
+table { border-collapse: collapse; border-spacing: 0px; width: 100%; overflow: auto; break-inside: auto; text-align: left; }
+table.md-table td { min-width: 32px; }
+.CodeMirror-gutters { border-right-width: 0px; background-color: inherit; }
+.CodeMirror-linenumber { }
+.CodeMirror { text-align: left; }
+.CodeMirror-placeholder { opacity: 0.3; }
+.CodeMirror pre { padding: 0px 4px; }
+.CodeMirror-lines { padding: 0px; }
+div.hr:focus { cursor: none; }
+#write pre { white-space: pre-wrap; }
+#write.fences-no-line-wrapping pre { white-space: pre; }
+#write pre.ty-contain-cm { white-space: normal; }
+.CodeMirror-gutters { margin-right: 4px; }
+.md-fences { font-size: 0.9rem; display: block; break-inside: avoid; text-align: left; overflow: visible; white-space: pre; background-image: inherit; background-size: inherit; background-attachment: inherit; background-origin: inherit; background-clip: inherit; background-color: inherit; position: relative !important; background-position: inherit inherit; background-repeat: inherit inherit; }
+.md-diagram-panel { width: 100%; margin-top: 10px; text-align: center; padding-top: 0px; padding-bottom: 8px; overflow-x: auto; }
+#write .md-fences.mock-cm { white-space: pre-wrap; }
+.md-fences.md-fences-with-lineno { padding-left: 0px; }
+#write.fences-no-line-wrapping .md-fences.mock-cm { white-space: pre; overflow-x: auto; }
+.md-fences.mock-cm.md-fences-with-lineno { padding-left: 8px; }
+.CodeMirror-line, twitterwidget { break-inside: avoid; }
+.footnotes { opacity: 0.8; font-size: 0.9rem; margin-top: 1em; margin-bottom: 1em; }
+.footnotes + .footnotes { margin-top: 0px; }
+.md-reset { margin: 0px; padding: 0px; border: 0px; outline: 0px; vertical-align: top; text-decoration: none; text-shadow: none; float: none; position: static; width: auto; height: auto; white-space: nowrap; cursor: inherit; line-height: normal; font-weight: 400; text-align: left; box-sizing: content-box; direction: ltr; background-position: 0px 0px; background-repeat: initial initial; }
+li div { padding-top: 0px; }
+blockquote { margin: 1rem 0px; }
+li .mathjax-block, li p { margin: 0.5rem 0px; }
+li { margin: 0px; position: relative; }
+blockquote > :last-child { margin-bottom: 0px; }
+blockquote > :first-child, li > :first-child { margin-top: 0px; }
+.footnotes-area { color: rgb(136, 136, 136); margin-top: 0.714rem; padding-bottom: 0.143rem; white-space: normal; }
+#write .footnote-line { white-space: pre-wrap; }
+@media print { 
+  body, html { border: 1px solid transparent; height: 99%; break-after: avoid-page; break-before: avoid-page; }
+  #write { margin-top: 0px; padding-top: 0px; border-color: transparent !important; }
+  .typora-export * { -webkit-print-color-adjust: exact; }
+  html.blink-to-pdf { font-size: 13px; }
+  .typora-export #write { padding-left: 32px; padding-right: 32px; padding-bottom: 0px; break-after: avoid-page; }
+  .typora-export #write::after { height: 0px; }
+}
+.footnote-line { margin-top: 0.714em; font-size: 0.7em; }
+a img, img a { cursor: pointer; }
+pre.md-meta-block { font-size: 0.8rem; min-height: 0.8rem; white-space: pre-wrap; background-color: rgb(204, 204, 204); display: block; overflow-x: hidden; background-position: initial initial; background-repeat: initial initial; }
+p > .md-image:only-child:not(.md-img-error) img, p > img:only-child { display: block; margin: auto; }
+p > .md-image:only-child { display: inline-block; width: 100%; }
+#write .MathJax_Display { margin: 0.8em 0px 0px; }
+.md-math-block { width: 100%; }
+.md-math-block:not(:empty)::after { display: none; }
+[contenteditable="true"]:active, [contenteditable="true"]:focus { outline: 0px; box-shadow: none; }
+.md-task-list-item { position: relative; list-style-type: none; }
+.task-list-item.md-task-list-item { padding-left: 0px; }
+.md-task-list-item > input { position: absolute; top: 0px; left: 0px; margin-left: -1.2em; margin-top: calc(1em - 10px); border: none; }
+.math { font-size: 1rem; }
+.md-toc { min-height: 3.58rem; position: relative; font-size: 0.9rem; border-top-left-radius: 10px; border-top-right-radius: 10px; border-bottom-right-radius: 10px; border-bottom-left-radius: 10px; }
+.md-toc-content { position: relative; margin-left: 0px; }
+.md-toc-content::after, .md-toc::after { display: none; }
+.md-toc-item { display: block; color: rgb(65, 131, 196); }
+.md-toc-item a { text-decoration: none; }
+.md-toc-inner:hover { text-decoration: underline; }
+.md-toc-inner { display: inline-block; cursor: pointer; }
+.md-toc-h1 .md-toc-inner { margin-left: 0px; font-weight: 700; }
+.md-toc-h2 .md-toc-inner { margin-left: 2em; }
+.md-toc-h3 .md-toc-inner { margin-left: 4em; }
+.md-toc-h4 .md-toc-inner { margin-left: 6em; }
+.md-toc-h5 .md-toc-inner { margin-left: 8em; }
+.md-toc-h6 .md-toc-inner { margin-left: 10em; }
+@media screen and (max-width: 48em) { 
+  .md-toc-h3 .md-toc-inner { margin-left: 3.5em; }
+  .md-toc-h4 .md-toc-inner { margin-left: 5em; }
+  .md-toc-h5 .md-toc-inner { margin-left: 6.5em; }
+  .md-toc-h6 .md-toc-inner { margin-left: 8em; }
+}
+a.md-toc-inner { font-size: inherit; font-style: inherit; font-weight: inherit; line-height: inherit; }
+.footnote-line a:not(.reversefootnote) { color: inherit; }
+.md-attr { display: none; }
+.md-fn-count::after { content: "."; }
+code, pre, samp, tt { font-family: var(--monospace); }
+kbd { margin: 0px 0.1em; padding: 0.1em 0.6em; font-size: 0.8em; color: rgb(36, 39, 41); background-color: rgb(255, 255, 255); border: 1px solid rgb(173, 179, 185); border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; box-shadow: rgba(12, 13, 14, 0.2) 0px 1px 0px, rgb(255, 255, 255) 0px 0px 0px 2px inset; white-space: nowrap; vertical-align: middle; background-position: initial initial; background-repeat: initial initial; }
+.md-comment { color: rgb(162, 127, 3); opacity: 0.8; font-family: var(--monospace); }
+code { text-align: left; }
+a.md-print-anchor { white-space: pre !important; border: none !important; display: inline-block !important; position: absolute !important; width: 1px !important; right: 0px !important; outline: 0px !important; text-shadow: initial !important; background-position: 0px 0px !important; background-repeat: initial initial !important; }
+.md-inline-math .MathJax_SVG .noError { display: none !important; }
+.html-for-mac .inline-math-svg .MathJax_SVG { vertical-align: 0.2px; }
+.md-math-block .MathJax_SVG_Display { text-align: center; margin: 0px; position: relative; text-indent: 0px; max-width: none; max-height: none; min-height: 0px; min-width: 100%; width: auto; overflow-y: hidden; display: block !important; }
+.MathJax_SVG_Display, .md-inline-math .MathJax_SVG_Display { width: auto; margin: inherit; display: inline-block !important; }
+.MathJax_SVG .MJX-monospace { font-family: var(--monospace); }
+.MathJax_SVG .MJX-sans-serif { font-family: sans-serif; }
+.MathJax_SVG { display: inline; font-style: normal; font-weight: 400; line-height: normal; zoom: 90%; text-indent: 0px; text-align: left; text-transform: none; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; direction: ltr; max-width: none; max-height: none; min-width: 0px; min-height: 0px; border: 0px; padding: 0px; margin: 0px; }
+.MathJax_SVG * { transition: none; }
+.MathJax_SVG_Display svg { vertical-align: middle !important; margin-bottom: 0px !important; margin-top: 0px !important; }
+.os-windows.monocolor-emoji .md-emoji { font-family: "Segoe UI Symbol", sans-serif; }
+.md-diagram-panel > svg { max-width: 100%; }
+[lang="mermaid"] svg, [lang="flow"] svg { max-width: 100%; height: auto; }
+[lang="mermaid"] .node text { font-size: 1rem; }
+table tr th { border-bottom-width: 0px; }
+video { max-width: 100%; display: block; margin: 0px auto; }
+iframe { max-width: 100%; width: 100%; border: none; }
+.highlight td, .highlight tr { border: 0px; }
+svg[id^="mermaidChart"] { line-height: 1em; }
+
+
+:root {
+    --side-bar-bg-color: #fafafa;
+    --control-text-color: #777;
+}
+
+@include-when-export url(https://fonts.loli.net/css?family=Open+Sans:400italic,700italic,700,400&subset=latin,latin-ext);
+
+html {
+    font-size: 16px;
+}
+
+body {
+    font-family: "Open Sans","Clear Sans","Helvetica Neue",Helvetica,Arial,sans-serif;
+    color: rgb(51, 51, 51);
+    line-height: 1.6;
+}
+
+#write {
+    max-width: 860px;
+  	margin: 0 auto;
+  	padding: 30px;
+    padding-bottom: 100px;
+}
+#write > ul:first-child,
+#write > ol:first-child{
+    margin-top: 30px;
+}
+
+a {
+    color: #4183C4;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    position: relative;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    font-weight: bold;
+    line-height: 1.4;
+    cursor: text;
+}
+h1:hover a.anchor,
+h2:hover a.anchor,
+h3:hover a.anchor,
+h4:hover a.anchor,
+h5:hover a.anchor,
+h6:hover a.anchor {
+    text-decoration: none;
+}
+h1 tt,
+h1 code {
+    font-size: inherit;
+}
+h2 tt,
+h2 code {
+    font-size: inherit;
+}
+h3 tt,
+h3 code {
+    font-size: inherit;
+}
+h4 tt,
+h4 code {
+    font-size: inherit;
+}
+h5 tt,
+h5 code {
+    font-size: inherit;
+}
+h6 tt,
+h6 code {
+    font-size: inherit;
+}
+h1 {
+    padding-bottom: .3em;
+    font-size: 2.25em;
+    line-height: 1.2;
+    border-bottom: 1px solid #eee;
+}
+h2 {
+   padding-bottom: .3em;
+    font-size: 1.75em;
+    line-height: 1.225;
+    border-bottom: 1px solid #eee;
+}
+h3 {
+    font-size: 1.5em;
+    line-height: 1.43;
+}
+h4 {
+    font-size: 1.25em;
+}
+h5 {
+    font-size: 1em;
+}
+h6 {
+   font-size: 1em;
+    color: #777;
+}
+p,
+blockquote,
+ul,
+ol,
+dl,
+table{
+    margin: 0.8em 0;
+}
+li>ol,
+li>ul {
+    margin: 0 0;
+}
+hr {
+    height: 2px;
+    padding: 0;
+    margin: 16px 0;
+    background-color: #e7e7e7;
+    border: 0 none;
+    overflow: hidden;
+    box-sizing: content-box;
+}
+
+li p.first {
+    display: inline-block;
+}
+ul,
+ol {
+    padding-left: 30px;
+}
+ul:first-child,
+ol:first-child {
+    margin-top: 0;
+}
+ul:last-child,
+ol:last-child {
+    margin-bottom: 0;
+}
+blockquote {
+    border-left: 4px solid #dfe2e5;
+    padding: 0 15px;
+    color: #777777;
+}
+blockquote blockquote {
+    padding-right: 0;
+}
+table {
+    padding: 0;
+    word-break: initial;
+}
+table tr {
+    border-top: 1px solid #dfe2e5;
+    margin: 0;
+    padding: 0;
+}
+table tr:nth-child(2n),
+thead {
+    background-color: #f8f8f8;
+}
+table tr th {
+    font-weight: bold;
+    border: 1px solid #dfe2e5;
+    border-bottom: 0;
+    margin: 0;
+    padding: 6px 13px;
+}
+table tr td {
+    border: 1px solid #dfe2e5;
+    margin: 0;
+    padding: 6px 13px;
+}
+table tr th:first-child,
+table tr td:first-child {
+    margin-top: 0;
+}
+table tr th:last-child,
+table tr td:last-child {
+    margin-bottom: 0;
+}
+
+.CodeMirror-lines {
+    padding-left: 4px;
+}
+
+.code-tooltip {
+    box-shadow: 0 1px 1px 0 rgba(0,28,36,.3);
+    border-top: 1px solid #eef2f2;
+}
+
+.md-fences,
+code,
+tt {
+    border: 1px solid #e7eaed;
+    background-color: #f8f8f8;
+    border-radius: 3px;
+    padding: 0;
+    padding: 2px 4px 0px 4px;
+    font-size: 0.9em;
+}
+
+code {
+    background-color: #f3f4f4;
+    padding: 0 2px 0 2px;
+}
+
+.md-fences {
+    margin-bottom: 15px;
+    margin-top: 15px;
+    padding-top: 8px;
+    padding-bottom: 6px;
+}
+
+
+.md-task-list-item > input {
+  margin-left: -1.3em;
+}
+
+@media print {
+    html {
+        font-size: 13px;
+    }
+    table,
+    pre {
+        page-break-inside: avoid;
+    }
+    pre {
+        word-wrap: break-word;
+    }
+}
+
+.md-fences {
+	background-color: #f8f8f8;
+}
+#write pre.md-meta-block {
+	padding: 1rem;
+    font-size: 85%;
+    line-height: 1.45;
+    background-color: #f7f7f7;
+    border: 0;
+    border-radius: 3px;
+    color: #777777;
+    margin-top: 0 !important;
+}
+
+.mathjax-block>.code-tooltip {
+	bottom: .375rem;
+}
+
+.md-mathjax-midline {
+    background: #fafafa;
+}
+
+#write>h3.md-focus:before{
+	left: -1.5625rem;
+	top: .375rem;
+}
+#write>h4.md-focus:before{
+	left: -1.5625rem;
+	top: .285714286rem;
+}
+#write>h5.md-focus:before{
+	left: -1.5625rem;
+	top: .285714286rem;
+}
+#write>h6.md-focus:before{
+	left: -1.5625rem;
+	top: .285714286rem;
+}
+.md-image>.md-meta {
+    /*border: 1px solid #ddd;*/
+    border-radius: 3px;
+    padding: 2px 0px 0px 4px;
+    font-size: 0.9em;
+    color: inherit;
+}
+
+.md-tag {
+    color: #a7a7a7;
+    opacity: 1;
+}
+
+.md-toc { 
+    margin-top:20px;
+    padding-bottom:20px;
+}
+
+.sidebar-tabs {
+    border-bottom: none;
+}
+
+#typora-quick-open {
+    border: 1px solid #ddd;
+    background-color: #f8f8f8;
+}
+
+#typora-quick-open-item {
+    background-color: #FAFAFA;
+    border-color: #FEFEFE #e5e5e5 #e5e5e5 #eee;
+    border-style: solid;
+    border-width: 1px;
+}
+
+/** focus mode */
+.on-focus-mode blockquote {
+    border-left-color: rgba(85, 85, 85, 0.12);
+}
+
+header, .context-menu, .megamenu-content, footer{
+    font-family: "Segoe UI", "Arial", sans-serif;
+}
+
+.file-node-content:hover .file-node-icon,
+.file-node-content:hover .file-node-open-state{
+    visibility: visible;
+}
+
+.mac-seamless-mode #typora-sidebar {
+    background-color: #fafafa;
+    background-color: var(--side-bar-bg-color);
+}
+
+.md-lang {
+    color: #b4654d;
+}
+
+.html-for-mac .context-menu {
+    --item-hover-bg-color: #E6F0FE;
+}
+
+#md-notification .btn {
+    border: 0;
+}
+
+.dropdown-menu .divider {
+    border-color: #e5e5e5;
+}
+
+.ty-preferences .window-content {
+    background-color: #fafafa;
+}
+
+.ty-preferences .nav-group-item.active {
+    color: white;
+    background: #999;
+}
+
+ .typora-export li, .typora-export p, .typora-export,  .footnote-line {white-space: normal;} 
+</style>
+</head>
+<body class='typora-export' >
+<div  id='write'  class = 'is-mac'><h2><a name="卷积神经网络" class="md-header-anchor"></a><span>卷积神经网络</span></h2><h3><a name="1-是什么" class="md-header-anchor"></a><span>1. 是什么</span></h3><p><span>一般意义下的神经网络是指全连接网络，就是说相邻两层神经元之间，两两互相连接，形成稠密的网络，例如，我们之前介绍的手写字识别的全连接网络。</span></p><p><img src="./images/ann_mnist.png" referrerpolicy="no-referrer" alt="ann_mnist"></p><p><span>我们把28*28的图的每一个像素展开，形成了一个784维的输入向量，然后通过两层网络的映射，得到最终的10种分类的结果。</span></p><p><span>直观上说，这种网络的结构，对于784个输入像素没有做任何区分，全部一视同仁的丢给隐藏层去发现他们之间的关联，进而收集到种种特征用以佐证当前图片是哪一个数字。</span></p><p><span>所以一种更擅长捕捉空间特性，且参数量更小的神经网络——</span><strong><span>卷积神经网络</span></strong><span>就被开发出来，并逐渐统治了计算机视觉领域。</span></p><p><span>接下来，首先介绍卷积神经网络最重要的两个组件：卷积和池化。</span></p><p>&nbsp;</p><h4><a name="卷积" class="md-header-anchor"></a><span>卷积</span></h4><p><span>我们保留图片原有的形状，即二维的矩阵。同时，我们定义一个N*N(例如3</span><span>*</span><span>3)的小矩阵，该矩阵称为卷积核。</span></p><p><img src="./images/conv_and_image.png" alt="conv_1pass" style="zoom:50%;" /></p><p><span>接下来，在图像的二维矩阵上按照特定的步长，将卷积核按照先横向再纵向的顺序扫过整个图像，并进行卷积，卷积的意思就是，把卷积核和它当前对应的图像矩阵的值进行相乘并加和，最终得到一个卷积后的矩阵，过程如下图所示：</span></p><p><span>!</span><img src="./images/conv_1pass.png" alt="conv_1pass" style="zoom:50%;" /></p><p><span>很显然，卷积后得到的输出仍然是矩阵，可以继续在其上执行卷积操作。</span></p><p>&nbsp;</p><p><span>当然，我们需要注意的是，图像一般有多通道，例如RGB。如果我们把三个通道的矩阵叠到一起，就变成了一个三维的张量, 例如图中左侧32</span><span>*</span><span>32</span><span>*</span><span>3的红色张量。而卷积核同样也要跟着变成一个N</span><span>*</span><span>N</span><span>*</span><span>3的张量，在图像的二维平面上滑动着做卷积操作。</span></p><p><img src="./images/3d_conv1.png" alt="image-20191111200442821" style="zoom:50%;" /></p><p><span>上图就是5个N</span><span>*</span><span>N</span><span>*</span><span>3的卷积核在依次经过卷积操作后，将原始图像卷成了Width</span><span>*</span><span>Width</span><span>*</span><span>5的张量。所以，下一次卷积核的尺寸应当为N2</span><span>*</span><span>N2</span><span>*</span><span> 5。也就是说，虽说卷积核是三维的，卷积操作也是三维的，但是我们限制了“通道”维度的自由，使得卷积核只在长和宽上移动（当然，这只是典型的卷积网络的做法）。</span></p><h4><a name="池化" class="md-header-anchor"></a><span>池化</span></h4><p><span>池化（也叫汇合）操作比较简单，一般有均值池化、最大值池化等，例如，2*2大小，步长1的最大值池化操作示例如下：</span></p><p><img src="./images/pooling.png" style="zoom:50%;" /></p><h4><a name="全连接层" class="md-header-anchor"></a><span>全连接层</span></h4><p><span>经过多层的卷积、池化操作后，将最后一层池化层的输出展开，变成一个向量，并用全连接层进行分类。</span></p><p>&nbsp;</p><h4><a name="完整网络结构" class="md-header-anchor"></a><span>完整网络结构</span></h4><p><span>以经典的AlexNet为例，网络结构如下：</span></p><p><img src="./images/alexnet_arch.png" style="zoom:50%;" /></p><p><span>图中Conv是卷积层，FC是全连接层。（池化层没有明确画出来）</span></p><p><span>每层卷积的输入、输出和参数规模：</span></p><p><img src="./images/alexnet_params.jpg" referrerpolicy="no-referrer"></p><p>&nbsp;</p><p>&nbsp;</p><h3><a name="2-为什么" class="md-header-anchor"></a><span>2. 为什么</span></h3><p><strong><span>2.1 为什么要引入卷积</span></strong></p><p><span>我们可以清楚地看到，卷积操作是一种作用于图片局部信息的操作，即，每个卷积核只关注一小片区域的信息（例如3</span><span>*</span><span>3，或者5</span><span>*</span><span>5）。每一类卷积核，处理一类通用的特征提取任务。</span></p><p><span>举个例子，如果一个卷积核的值是:</span></p><div contenteditable="false" spellcheck="false" class="mathjax-block md-end-block md-math-block md-rawblock" id="mathjax-n35" cid="n35" mdtype="math_block">
+			
+		<div class="md-rawblock-container md-math-container" contenteditable="false" tabindex="-1">
+						<div class="MathJax_SVG_Display" style="text-align: center;"><span class="MathJax_SVG" id="MathJax-Element-84-Frame" tabindex="-1" style="font-size: 100%; display: inline-block;"><svg xmlns:xlink="http://www.w3.org/1999/xlink" width="22.035ex" height="9.114ex" viewBox="0 -2213.4 9487.1 3924.2" role="img" focusable="false" style="vertical-align: -3.974ex; max-width: 100%;"><defs><path stroke-width="0" id="E285-MJMAIN-5B" d="M118 -250V750H255V710H158V-210H255V-250H118Z"></path><path stroke-width="0" id="E285-MJMAIN-30" d="M96 585Q152 666 249 666Q297 666 345 640T423 548Q460 465 460 320Q460 165 417 83Q397 41 362 16T301 -15T250 -22Q224 -22 198 -16T137 16T82 83Q39 165 39 320Q39 494 96 585ZM321 597Q291 629 250 629Q208 629 178 597Q153 571 145 525T137 333Q137 175 145 125T181 46Q209 16 250 16Q290 16 318 46Q347 76 354 130T362 333Q362 478 354 524T321 597Z"></path><path stroke-width="0" id="E285-MJMAIN-2212" d="M84 237T84 250T98 270H679Q694 262 694 250T679 230H98Q84 237 84 250Z"></path><path stroke-width="0" id="E285-MJMAIN-34" d="M462 0Q444 3 333 3Q217 3 199 0H190V46H221Q241 46 248 46T265 48T279 53T286 61Q287 63 287 115V165H28V211L179 442Q332 674 334 675Q336 677 355 677H373L379 671V211H471V165H379V114Q379 73 379 66T385 54Q393 47 442 46H471V0H462ZM293 211V545L74 212L183 211H293Z"></path><path stroke-width="0" id="E285-MJMAIN-31" d="M213 578L200 573Q186 568 160 563T102 556H83V602H102Q149 604 189 617T245 641T273 663Q275 666 285 666Q294 666 302 660V361L303 61Q310 54 315 52T339 48T401 46H427V0H416Q395 3 257 3Q121 3 100 0H88V46H114Q136 46 152 46T177 47T193 50T201 52T207 57T213 61V578Z"></path><path stroke-width="0" id="E285-MJMAIN-36" d="M42 313Q42 476 123 571T303 666Q372 666 402 630T432 550Q432 525 418 510T379 495Q356 495 341 509T326 548Q326 592 373 601Q351 623 311 626Q240 626 194 566Q147 500 147 364L148 360Q153 366 156 373Q197 433 263 433H267Q313 433 348 414Q372 400 396 374T435 317Q456 268 456 210V192Q456 169 451 149Q440 90 387 34T253 -22Q225 -22 199 -14T143 16T92 75T56 172T42 313ZM257 397Q227 397 205 380T171 335T154 278T148 216Q148 133 160 97T198 39Q222 21 251 21Q302 21 329 59Q342 77 347 104T352 209Q352 289 347 316T329 361Q302 397 257 397Z"></path><path stroke-width="0" id="E285-MJMAIN-5D" d="M22 710V750H159V-250H22V-210H119V710H22Z"></path><path stroke-width="0" id="E285-MJSZ4-23A1" d="M319 -645V1154H666V1070H403V-645H319Z"></path><path stroke-width="0" id="E285-MJSZ4-23A3" d="M319 -644V1155H403V-560H666V-644H319Z"></path><path stroke-width="0" id="E285-MJSZ4-23A2" d="M319 0V602H403V0H319Z"></path><path stroke-width="0" id="E285-MJSZ4-23A4" d="M0 1070V1154H347V-645H263V1070H0Z"></path><path stroke-width="0" id="E285-MJSZ4-23A6" d="M263 -560V1155H347V-644H0V-560H263Z"></path><path stroke-width="0" id="E285-MJSZ4-23A5" d="M263 0V602H347V0H263Z"></path></defs><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="matrix(1 0 0 -1 0 0)"><g transform="translate(0,2150)"><use xlink:href="#E285-MJSZ4-23A1" x="0" y="-1154"></use><g transform="translate(0,-2051) scale(1,0.5016611295681063)"><use xlink:href="#E285-MJSZ4-23A2"></use></g><use xlink:href="#E285-MJSZ4-23A3" x="0" y="-3156"></use></g><g transform="translate(834,0)"><g transform="translate(-15,0)"><use xlink:href="#E285-MJMAIN-30" x="389" y="1350"></use><g transform="translate(0,-50)"><use xlink:href="#E285-MJMAIN-2212" x="0" y="0"></use><use xlink:href="#E285-MJMAIN-34" x="778" y="0"></use></g><use xlink:href="#E285-MJMAIN-30" x="389" y="-1450"></use></g><g transform="translate(3263,0)"><g transform="translate(0,1350)"><use xlink:href="#E285-MJMAIN-2212" x="0" y="0"></use><use xlink:href="#E285-MJMAIN-34" x="778" y="0"></use></g><g transform="translate(139,-50)"><use xlink:href="#E285-MJMAIN-31"></use><use xlink:href="#E285-MJMAIN-36" x="500" y="0"></use></g><g transform="translate(0,-1450)"><use xlink:href="#E285-MJMAIN-2212" x="0" y="0"></use><use xlink:href="#E285-MJMAIN-34" x="778" y="0"></use></g></g><g transform="translate(6541,0)"><use xlink:href="#E285-MJMAIN-30" x="389" y="1350"></use><g transform="translate(0,-50)"><use xlink:href="#E285-MJMAIN-2212" x="0" y="0"></use><use xlink:href="#E285-MJMAIN-34" x="778" y="0"></use></g><use xlink:href="#E285-MJMAIN-30" x="389" y="-1450"></use></g></g><g transform="translate(8820,2150)"><use xlink:href="#E285-MJSZ4-23A4" x="0" y="-1154"></use><g transform="translate(0,-2051) scale(1,0.5016611295681063)"><use xlink:href="#E285-MJSZ4-23A5"></use></g><use xlink:href="#E285-MJSZ4-23A6" x="0" y="-3156"></use></g></g></svg></span></div><script type="math/tex; mode=display" id="MathJax-Element-84">\begin{bmatrix}<br>	0 && -4 && 0 \\<br>	-4 && 16 && -4\\<br>	0  && -4 && 0<br>\end{bmatrix}</script>
+					</div></div><p><span>那么，这个卷积核将很擅长找到边缘像素。因为，如果在大片同样颜色的区域，某一个点周围的值都是相同的，那么它们的值在经过上面的卷积后，将变为0。而，如果在边缘区域，经过上述卷积后，将很大概率不为0。</span></p><p><span>同样的原因，形如：</span></p><div mdtype="math_block" cid="n45" id="mathjax-n45" class="mathjax-block md-end-block md-math-block md-rawblock" spellcheck="false" contenteditable="false">
+			
+		<div class="md-rawblock-container md-math-container" contenteditable="false" tabindex="-1">
+						<div class="MathJax_SVG_Display" style="text-align: center;"><span class="MathJax_SVG" id="MathJax-Element-81-Frame" tabindex="-1" style="font-size: 100%; display: inline-block;"><svg xmlns:xlink="http://www.w3.org/1999/xlink" width="18.421ex" height="9.114ex" viewBox="0 -2213.4 7931.1 3924.2" role="img" focusable="false" style="vertical-align: -3.974ex; max-width: 100%;"><defs><path stroke-width="0" id="E282-MJMAIN-5B" d="M118 -250V750H255V710H158V-210H255V-250H118Z"></path><path stroke-width="0" id="E282-MJMAIN-31" d="M213 578L200 573Q186 568 160 563T102 556H83V602H102Q149 604 189 617T245 641T273 663Q275 666 285 666Q294 666 302 660V361L303 61Q310 54 315 52T339 48T401 46H427V0H416Q395 3 257 3Q121 3 100 0H88V46H114Q136 46 152 46T177 47T193 50T201 52T207 57T213 61V578Z"></path><path stroke-width="0" id="E282-MJMAIN-2212" d="M84 237T84 250T98 270H679Q694 262 694 250T679 230H98Q84 237 84 250Z"></path><path stroke-width="0" id="E282-MJMAIN-32" d="M109 429Q82 429 66 447T50 491Q50 562 103 614T235 666Q326 666 387 610T449 465Q449 422 429 383T381 315T301 241Q265 210 201 149L142 93L218 92Q375 92 385 97Q392 99 409 186V189H449V186Q448 183 436 95T421 3V0H50V19V31Q50 38 56 46T86 81Q115 113 136 137Q145 147 170 174T204 211T233 244T261 278T284 308T305 340T320 369T333 401T340 431T343 464Q343 527 309 573T212 619Q179 619 154 602T119 569T109 550Q109 549 114 549Q132 549 151 535T170 489Q170 464 154 447T109 429Z"></path><path stroke-width="0" id="E282-MJMAIN-30" d="M96 585Q152 666 249 666Q297 666 345 640T423 548Q460 465 460 320Q460 165 417 83Q397 41 362 16T301 -15T250 -22Q224 -22 198 -16T137 16T82 83Q39 165 39 320Q39 494 96 585ZM321 597Q291 629 250 629Q208 629 178 597Q153 571 145 525T137 333Q137 175 145 125T181 46Q209 16 250 16Q290 16 318 46Q347 76 354 130T362 333Q362 478 354 524T321 597Z"></path><path stroke-width="0" id="E282-MJMAIN-5D" d="M22 710V750H159V-250H22V-210H119V710H22Z"></path><path stroke-width="0" id="E282-MJSZ4-23A1" d="M319 -645V1154H666V1070H403V-645H319Z"></path><path stroke-width="0" id="E282-MJSZ4-23A3" d="M319 -644V1155H403V-560H666V-644H319Z"></path><path stroke-width="0" id="E282-MJSZ4-23A2" d="M319 0V602H403V0H319Z"></path><path stroke-width="0" id="E282-MJSZ4-23A4" d="M0 1070V1154H347V-645H263V1070H0Z"></path><path stroke-width="0" id="E282-MJSZ4-23A6" d="M263 -560V1155H347V-644H0V-560H263Z"></path><path stroke-width="0" id="E282-MJSZ4-23A5" d="M263 0V602H347V0H263Z"></path></defs><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="matrix(1 0 0 -1 0 0)"><g transform="translate(0,2150)"><use xlink:href="#E282-MJSZ4-23A1" x="0" y="-1154"></use><g transform="translate(0,-2051) scale(1,0.5016611295681063)"><use xlink:href="#E282-MJSZ4-23A2"></use></g><use xlink:href="#E282-MJSZ4-23A3" x="0" y="-3156"></use></g><g transform="translate(834,0)"><g transform="translate(-15,0)"><use xlink:href="#E282-MJMAIN-31" x="0" y="1350"></use><use xlink:href="#E282-MJMAIN-30" x="0" y="-50"></use><use xlink:href="#E282-MJMAIN-31" x="0" y="-1450"></use></g><g transform="translate(2485,0)"><g transform="translate(0,1350)"><use xlink:href="#E282-MJMAIN-2212" x="0" y="0"></use><use xlink:href="#E282-MJMAIN-32" x="778" y="0"></use></g><use xlink:href="#E282-MJMAIN-30" x="389" y="-50"></use><use xlink:href="#E282-MJMAIN-32" x="389" y="-1450"></use></g><g transform="translate(5763,0)"><use xlink:href="#E282-MJMAIN-31" x="0" y="1350"></use><use xlink:href="#E282-MJMAIN-30" x="0" y="-50"></use><use xlink:href="#E282-MJMAIN-31" x="0" y="-1450"></use></g></g><g transform="translate(7264,2150)"><use xlink:href="#E282-MJSZ4-23A4" x="0" y="-1154"></use><g transform="translate(0,-2051) scale(1,0.5016611295681063)"><use xlink:href="#E282-MJSZ4-23A5"></use></g><use xlink:href="#E282-MJSZ4-23A6" x="0" y="-3156"></use></g></g></svg></span></div><script type="math/tex; mode=display" id="MathJax-Element-81">\begin{bmatrix}<br>	1 && -2 && 1 \\<br>	0 && 0 && 0\\<br>	1  && 2 && 1<br>\end{bmatrix}</script>
+					</div></div><p><span>的卷积核擅长找横向边缘，而形如：</span></p><div mdtype="math_block" cid="n53" id="mathjax-n53" class="mathjax-block md-end-block md-math-block md-rawblock" spellcheck="false" contenteditable="false">
+			
+		<div class="md-rawblock-container md-math-container" contenteditable="false" tabindex="-1">
+						<div class="MathJax_SVG_Display" style="text-align: center;"><span class="MathJax_SVG" id="MathJax-Element-80-Frame" tabindex="-1" style="font-size: 100%; display: inline-block;"><svg xmlns:xlink="http://www.w3.org/1999/xlink" width="18.421ex" height="9.114ex" viewBox="0 -2213.4 7931.1 3924.2" role="img" focusable="false" style="vertical-align: -3.974ex; max-width: 100%;"><defs><path stroke-width="0" id="E276-MJMAIN-5B" d="M118 -250V750H255V710H158V-210H255V-250H118Z"></path><path stroke-width="0" id="E276-MJMAIN-31" d="M213 578L200 573Q186 568 160 563T102 556H83V602H102Q149 604 189 617T245 641T273 663Q275 666 285 666Q294 666 302 660V361L303 61Q310 54 315 52T339 48T401 46H427V0H416Q395 3 257 3Q121 3 100 0H88V46H114Q136 46 152 46T177 47T193 50T201 52T207 57T213 61V578Z"></path><path stroke-width="0" id="E276-MJMAIN-30" d="M96 585Q152 666 249 666Q297 666 345 640T423 548Q460 465 460 320Q460 165 417 83Q397 41 362 16T301 -15T250 -22Q224 -22 198 -16T137 16T82 83Q39 165 39 320Q39 494 96 585ZM321 597Q291 629 250 629Q208 629 178 597Q153 571 145 525T137 333Q137 175 145 125T181 46Q209 16 250 16Q290 16 318 46Q347 76 354 130T362 333Q362 478 354 524T321 597Z"></path><path stroke-width="0" id="E276-MJMAIN-2212" d="M84 237T84 250T98 270H679Q694 262 694 250T679 230H98Q84 237 84 250Z"></path><path stroke-width="0" id="E276-MJMAIN-32" d="M109 429Q82 429 66 447T50 491Q50 562 103 614T235 666Q326 666 387 610T449 465Q449 422 429 383T381 315T301 241Q265 210 201 149L142 93L218 92Q375 92 385 97Q392 99 409 186V189H449V186Q448 183 436 95T421 3V0H50V19V31Q50 38 56 46T86 81Q115 113 136 137Q145 147 170 174T204 211T233 244T261 278T284 308T305 340T320 369T333 401T340 431T343 464Q343 527 309 573T212 619Q179 619 154 602T119 569T109 550Q109 549 114 549Q132 549 151 535T170 489Q170 464 154 447T109 429Z"></path><path stroke-width="0" id="E276-MJMAIN-5D" d="M22 710V750H159V-250H22V-210H119V710H22Z"></path><path stroke-width="0" id="E276-MJSZ4-23A1" d="M319 -645V1154H666V1070H403V-645H319Z"></path><path stroke-width="0" id="E276-MJSZ4-23A3" d="M319 -644V1155H403V-560H666V-644H319Z"></path><path stroke-width="0" id="E276-MJSZ4-23A2" d="M319 0V602H403V0H319Z"></path><path stroke-width="0" id="E276-MJSZ4-23A4" d="M0 1070V1154H347V-645H263V1070H0Z"></path><path stroke-width="0" id="E276-MJSZ4-23A6" d="M263 -560V1155H347V-644H0V-560H263Z"></path><path stroke-width="0" id="E276-MJSZ4-23A5" d="M263 0V602H347V0H263Z"></path></defs><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="matrix(1 0 0 -1 0 0)"><g transform="translate(0,2150)"><use xlink:href="#E276-MJSZ4-23A1" x="0" y="-1154"></use><g transform="translate(0,-2051) scale(1,0.5016611295681063)"><use xlink:href="#E276-MJSZ4-23A2"></use></g><use xlink:href="#E276-MJSZ4-23A3" x="0" y="-3156"></use></g><g transform="translate(834,0)"><g transform="translate(-15,0)"><use xlink:href="#E276-MJMAIN-31" x="389" y="1350"></use><g transform="translate(0,-50)"><use xlink:href="#E276-MJMAIN-2212" x="0" y="0"></use><use xlink:href="#E276-MJMAIN-32" x="778" y="0"></use></g><use xlink:href="#E276-MJMAIN-31" x="389" y="-1450"></use></g><g transform="translate(3263,0)"><use xlink:href="#E276-MJMAIN-30" x="0" y="1350"></use><use xlink:href="#E276-MJMAIN-30" x="0" y="-50"></use><use xlink:href="#E276-MJMAIN-30" x="0" y="-1450"></use></g><g transform="translate(5763,0)"><use xlink:href="#E276-MJMAIN-31" x="0" y="1350"></use><use xlink:href="#E276-MJMAIN-32" x="0" y="-50"></use><use xlink:href="#E276-MJMAIN-31" x="0" y="-1450"></use></g></g><g transform="translate(7264,2150)"><use xlink:href="#E276-MJSZ4-23A4" x="0" y="-1154"></use><g transform="translate(0,-2051) scale(1,0.5016611295681063)"><use xlink:href="#E276-MJSZ4-23A5"></use></g><use xlink:href="#E276-MJSZ4-23A6" x="0" y="-3156"></use></g></g></svg></span></div><script type="math/tex; mode=display" id="MathJax-Element-80">\begin{bmatrix}<br>	1 && 0 && 1 \\<br>	-2 && 0 && 2\\<br>	1  && 0 && 1<br>\end{bmatrix}</script>
+					</div></div><p><span>的卷积核擅长找纵向边缘。</span></p><p><img src="./images/edge_kernels.png" style="zoom:50%;" /></p><p><span>上图就是一张图片经过上述三种卷积核处理后得到的图片内容，可以明显看出它们的差异。</span></p><p><span>在漫长（相对于计算机科学短暂的发展历程而言）的时间里，视觉算法专家们都在尝试手工设计各式各样的滤波器（卷积核）来提取各式各样的特征。而现今的卷积神经网络，更多是利用强大的学习能力自发地找到了能提取各种特征的卷积核，并且体现出了比专家们手工设计的卷积核强大很多的能力。换句话说，海量的数据告诉了CNN网络，应该怎么去合理的设计这些卷积核，才能用它们从低层到高层，从细节到抽象，一步一步的学习出各式各样可以区分世间万物的各式各样的卷积核。</span></p><p>&nbsp;</p><p><span>卷积核的概念，很大程度地受到了认知神经科学的“感受野”概念的启发。感受野是指在视觉神经系统中，特定神经元只会响应视网膜部分区域光感受器的刺激信号。实际上，卷积核也同样如此，某一个卷积核在同一时间只会关注于当前二维图像的部分区域。起到的效果就是，下层的每一个神经元只接受上层部分区域内神经元的输出信号：</span></p><p><img src="./images/cnn_vision.png" referrerpolicy="no-referrer"></p><p><span>例如，左图7</span><span>*</span><span>7的卷积核使得后层神经元的感受野被限制在了对应大小的前层区域内。</span></p><p><span>同时，我们需要指出的一点是，如果我们用多层小卷积核，例如3</span><span>*</span><span>3尺寸，代替单层的大卷积核，在经历过几层堆叠后，能够同样将感受野扩大至相等大小的区域。而且，多层小卷积核相比单层大卷积核几个好处：</span></p><p><span>（1）能够从局部特征经过组合得到抽象特征</span></p><p><span>（2）要实现同样大小的感受野，需要的参数量更小：7</span><span>*</span><span>7=49, 3</span><span>*</span><span>3</span><span>*</span><span>3=27</span></p><p><span>局部、泛化到抽象、整体的特征提取过程已经是计算机视觉，乃至整个深度学习领域的共识。</span></p><p><span>2014年，Zeiler和Fergus在它们的工作中，利用反卷积技术对卷积神经网络的特征进行了可视化，洞察了包括特征层次性在内的一系列卷积网络的特性。它们分析了CNN各层所学到的特征，发现浅层大多是纹理、边缘等泛化的特征，而越高的层次，就包含越多和语义、物体相关的整体特征，例如轮子、动物脸部、文字等等：</span></p><p><img src="./images/cnn_analyze.png" referrerpolicy="no-referrer"></p><p>&nbsp;</p><p><strong><span>2.2 池化层的作用</span></strong></p><p><span>（1）空间不变性（平移和翻转）。例如，我们的池化操作是在2</span><span>*</span><span>2的范围内取最大值，那么，这个最大值出现在第一、第二、第三、第四个位置将会产生同样的输出；也就是说微小的平移或者翻转，经过池化处理后，将变得不再重要。这也就带来了一定的泛化的作用。</span></p><p><span>（2）降采样。很明显，经过池化后二维平面的像素会降低，也就带来了一定的计算量和参数量的降低。</span></p><p>&nbsp;</p><p><strong><span>2.3</span></strong><span> </span><strong><span>分布式表示</span></strong><span> </span></p><p><span>另外一个重要的特性，叫分布式表示，这其实是现今深度学习各个领域——NLP、视觉、音频等共同研究的热点。我们以前会大量使用独热编码来表示各种概念，例如，如果我们现在只想表示猫和狗两种动物，可以表示为[1,0]和[0,1]，即第一个维度是猫，第二个维度为狗。而分布式表示的思路类似于，我们测量一张图片里某个物体的三种属性：脸圆程度、掌垫、鼻子大小，如果一张图片是[0.9, 0.1,0.1]，那么它就是一只猫，如果一张图片是[0.4,0.8,0.6]，那么它就是一只狗……</span></p><p><span>显然，我们举的例子过于简单了，但是表达的意思就是，一种物体、概念，由很多个维度的值共同决定，而这个维度的数量，一般在深度学习中是几百到几千维不等（例如最后一层卷积层的卷积核的个数），也就是说，</span><strong><span>网络中同时激活的神经元组成的模式，代表了某一个现实世界中的物体或概念。</span></strong></p><p><span>例如，下图就是多个卷积核对于不同物体的激活情况，每一列对应着同一个卷积核，可以看到它们对不同的图片的激活区域都不相同。而多个卷积核的同时激活，以及激活程度，最后组合起来形成一个对应的概念。</span></p><p><img src="./images/conv_activate.png" referrerpolicy="no-referrer"></p></div>
+</body>
+</html>
