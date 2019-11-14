@@ -28,3 +28,5 @@
 
 [支持向量机](./statistical-learning/SVM.html)
 
+[基于numpy的部分实现](https://github.com/weize07/statistical-learning-methods)
+
