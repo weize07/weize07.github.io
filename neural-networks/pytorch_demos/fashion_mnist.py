@@ -24,18 +24,24 @@ class FashionCNN(nn.Module):
         super().__init__()
         self.conv1 = nn.Conv2d(1, 128, kernel_size=3, stride=1, padding=1) #Wout = 28
         self.add_module('Conv1', self.conv1)
+        self.conv1_bn = nn.BatchNorm2d(128)
+        self.add_module('ConvBN1', self.conv1_bn)
         self.pool1 = nn.MaxPool2d(kernel_size=2, stride=2, padding=0) #Wout=14
         self.add_module('Pool1', self.pool1)
         self.relu1 = nn.ReLU()
         self.add_module('Relu1', self.relu1)
         self.conv2 = nn.Conv2d(128, 128, kernel_size=3, stride=1, padding=1) #Wout=14
         self.add_module('Conv2', self.conv2)
+        self.conv2_bn = nn.BatchNorm2d(128)
+        self.add_module('ConvBN2', self.conv2_bn)
         self.pool2 = nn.MaxPool2d(kernel_size=2, stride=2, padding=0) #Wout=7
         self.add_module('Pool2', self.pool2)
         self.relu2 = nn.ReLU()
         self.add_module('Relu2', self.relu2)
         self.fc1 = nn.Linear(7 * 7 * 128, 256) #input: width and height = Wout of pool2, depth = 18
         self.add_module('FC1', self.fc1)
+        self.conv3_bn = nn.BatchNorm1d(256)
+        self.add_module('ConvBN3', self.conv3_bn)
         self.relu3 = nn.ReLU()
         self.add_module('Relu3', self.relu3)
         self.fc2 = nn.Linear(256, 10) # output: number of classes
@@ -44,14 +50,14 @@ class FashionCNN(nn.Module):
         self.add_module('Softmax', self.soft)
 
     def forward(self, x):
-        x = self.relu1(self.conv1(x))
+        x = self.relu1(self.conv1_bn(self.conv1(x)))
         x = self.pool1(x)
 
-        x = self.relu2(self.conv2(x))
+        x = self.relu2(self.conv2_bn(self.conv2(x)))
         x = self.pool2(x)
         x = x.view(-1, 7 * 7 * 128)
 
-        x = self.relu3(self.fc1(x))
+        x = self.relu3(self.conv3_bn(self.fc1(x)))
 
         x = self.soft(self.fc2(x))
         return x
@@ -155,7 +161,7 @@ if __name__ == '__main__':
 
         print(total_correct, len(val_loader))    
         print("Validation loss = {:.2f}".format(total_val_loss / len(val_loader)))
-        print("Validation accuracy = {:.2f}".format(total_correct / total))
+        print("Validation accuracy = {:.3f}".format(total_correct / total))
 
 
 
