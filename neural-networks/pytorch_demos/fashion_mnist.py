@@ -67,9 +67,12 @@ class FashionCNN(nn.Module):
 if __name__ == '__main__':
     root = './data'
     learning_rate = 0.001
-    n_epochs = 30
-    batch_size = 64
-    train_ds = datasets.FashionMNIST(root, train=True, transform = transforms.ToTensor(), target_transform=None, download=False)
+    n_epochs = 100
+    batch_size = 128
+    trans = [transforms.RandomHorizontalFlip(),
+             transforms.RandomCrop(28, padding=4),
+             transforms.ToTensor()]
+    train_ds = datasets.FashionMNIST(root, train=True, transform = transforms.Compose(trans), target_transform=None, download=False)
     test_ds = datasets.FashionMNIST(root, train=False, transform = transforms.ToTensor(), target_transform=None, download=False)
 
     classes = ('T-shirt/top', 'Trouser', 'Pullover', 'Dress', 'Coat',
