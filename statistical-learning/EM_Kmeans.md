@@ -13,7 +13,7 @@ $$
 $$
 这个问题我们无法用极大似然去求解，那么就需要用一些技巧了。
 
-先引入一个未知的分布$Q(z_i),其中\sum_iQ(z_i) = 1$, 将上式改写为：
+先引入一个未知的分布$Q(z_i),其中\sum_{z_i}Q(z_i) = 1$, 将上式改写为：
 $$
 \mathop{\arg\max}_{\theta}\sum_ilog(\sum_{z_i}P(\bold x_i,\bold z_i;\theta)) \\
 = \mathop{\arg\max}_{\theta}\sum_ilog(\sum_{z_i}Q(z_i)\frac{P(\bold x_i,\bold z_i;\theta)}{Q(z_i)})\\
@@ -23,12 +23,31 @@ $$
 
 对于上式，仅在$\frac{P(\bold x_i,\bold z_i;\theta)}{Q(z_i)} = C$ 的情况下， 可以使等号成立。
 
-而因为 $\sum_iQ(z_i) = 1$, 所以：
+而因为 $\sum_{z_i}Q(z_i) = 1$, 所以：
 $$
 Q(z_i) = \frac{P(\bold x_i,\bold z_i;\theta)}{\sum_{z_i}P(\bold x_i,\bold z_i;\theta)}\\
 =P(\bold z_i|\bold x_i;\theta)
 $$
 所以，当$Q(\bold z_i)=P(\bold z_i|\bold x_i;\theta)$ 时，$\sum_i\sum_{z_i}Q(z_i)log(\frac{P(\bold x_i,\bold z_i;\theta)}{Q(z_i)})$ 就是原问题 $\sum_ilog(\sum_{z_i}P(\bold x_i,\bold z_i;\theta))$ 的一个下界，且此时两者相等。那么如果我们能使得下界$\sum_i\sum_{z_i}Q(z_i)log(\frac{P(\bold x_i,\bold z_i;\theta)}{Q(z_i)})$ 变大，那么原问题一定也会变大。
 
+EM算法拆分成两步：
 
+1. E步，给定$ \theta^{(t)} $ 的情况下, 求得分布$ Q(z_i)^{(t)}=P(\bold z_i|\bold x_i;\theta^{(t)}) $使得下界等于原问题。
+
+   并且基于新的分布$ Q(z_i)^{(t)} $求得$ log(P(\bold x_i, \bold z_i;\theta)) $的期望:
+   $$
+   \sum_i\sum_{z_i}Q(z_i)^{(t)}log(\frac{P(\bold x_i,\bold z_i;\theta)}{Q(z_i)^{(t)}})\\
+   =\sum_i\sum_{z_i}Q(z_i)^{(t)}log(P(\bold x_i,\bold z_i;\theta))-const
+   $$
+
+2. M步，对上述问题求极大，即
+   $$
+   \theta^{(t+1)}=\mathop{\arg\max}_{\theta}\sum_i\sum_{z_i}Q(z_i)^{(t)}log(P(\bold x_i,\bold z_i;\theta))
+   $$
+
+初始化的时候可以对随机获得$\theta^{(0)}$, 重复E-M步直至收敛。
+
+
+
+### Kmeans算法的EM解释
 
