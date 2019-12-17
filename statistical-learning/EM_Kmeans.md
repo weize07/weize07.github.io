@@ -2,22 +2,22 @@
 
 在一般的问题中，我们通常定义由参数$\theta$ 决定的概率密度函数$P(\bold x;\bold \theta)$, 然后在数据集$\bold X=\{\bold x_1,\bold x_2,...,\bold x_N\}$上求极大对数似然：
 $$
-\mathop{\arg\min}_{\bold \theta} log(\prod_i P(\bold x_i;\theta))\\
-=\mathop{\arg\min}_{\bold \theta}\sum_ilog(P(\bold x_i;\theta))
+\mathop{\arg\max}_{\bold \theta} log(\prod_i P(\bold x_i;\theta))\\
+=\mathop{\arg\max}_{\bold \theta}\sum_ilog(P(\bold x_i;\theta))
 $$
 但是在有些问题中，存在不可观测的隐变量$\bold z$，问题就变成了
 $$
 \begin{align*}
-\mathop{\arg\min}_{\bold \theta}\sum_ilog(\sum_{z_i}P(\bold x_i,\bold z_i;\theta)) 
+\mathop{\arg\max}_{\bold \theta}\sum_ilog(\sum_{z_i}P(\bold x_i,\bold z_i;\theta)) 
 \end{align*}
 $$
 这个问题我们无法用极大似然去求解，那么就需要用一些技巧了。
 
 先引入一个未知的分布$Q(z_i),其中\sum_iQ(z_i) = 1$, 将上式改写为：
 $$
-\mathop{\arg\min}_{\theta}\sum_ilog(\sum_{z_i}P(\bold x_i,\bold z_i;\theta)) \\
-= \mathop{\arg\min}_{\theta}\sum_ilog(\sum_{z_i}Q(z_i)\frac{P(\bold x_i,\bold z_i;\theta)}{Q(z_i)})\\
-\geq \mathop{\arg\min}_{\theta}\sum_i\sum_{z_i}Q(z_i)log(\frac{P(\bold x_i,\bold z_i;\theta)}{Q(z_i)})
+\mathop{\arg\max}_{\theta}\sum_ilog(\sum_{z_i}P(\bold x_i,\bold z_i;\theta)) \\
+= \mathop{\arg\max}_{\theta}\sum_ilog(\sum_{z_i}Q(z_i)\frac{P(\bold x_i,\bold z_i;\theta)}{Q(z_i)})\\
+\geq \mathop{\arg\max}_{\theta}\sum_i\sum_{z_i}Q(z_i)log(\frac{P(\bold x_i,\bold z_i;\theta)}{Q(z_i)})
 $$
 其中,  $\geq$ 是由Jensen不等式推导得到：对于上凸函数$f(x), f(E(x)) \geq E(f(x))$。
 
