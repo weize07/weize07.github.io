@@ -49,5 +49,52 @@ EM算法拆分成两步：
 
 
 
-### Kmeans算法的EM解释
+### EM算法收敛性证明
 
+要说明算法收敛，只需证明:
+$$
+\sum_ilog(P(\bold x_i;\theta^{(t+1)})) >=\sum_ilog(P(\bold x_i;\theta^{(t)}))
+$$
+首先，我们对式子做一下变形：
+$$
+\sum_ilog(P(\bold x_i;\theta))\\ 
+= \sum_i\sum_{z_i}Q(\bold z_i)^{(t)} log(P(\bold x_i;\theta))\\
+= \sum_i\sum_{z_i}Q(\bold z_i)^{(t)} log(\frac{P(\bold x_i,\bold z_i;\theta)}
+{P(\bold z_i|\bold x_i;\theta)})\\
+= \sum_i\sum_{z_i}Q(\bold z_i)^{(t)} log(P(\bold x_i,\bold z_i;\theta) - 
+\sum_i\sum_{z_i}Q(\bold z_i)^{(t)} log(P(\bold z_i|\bold x_i;\theta))\\
+$$
+于是令：
+$$
+L(\theta,\theta^{(t)}) = \sum_i\sum_{z_i}Q(z_i)^{(t)}log(P(\bold x_i,\bold z_i;\theta))\\
+H(\theta,\theta^{(t)}) = \sum_i\sum_{z_i}Q(z_i)^{(t)}log(P(\bold z_i|\bold x_i;\theta))\\
+$$
+因此：
+$$
+\because \sum_ilog(P(\bold x_i;\theta))= L(\theta, \theta^{(t)}) - H(\theta, \theta^{(t)})\\
+\therefore \sum_ilog(P(\bold x_i;\theta^{(t+1)})) - \sum_ilog(P(\bold x_i;\theta^{(t)}))\\
+= [L(\theta^{(t+1)}, \theta^{(t)}) - L(\theta^{(t)}, \theta^{(t)})] - [H(\theta^{(t+1)}, \theta^{(t)}) - H(\theta^{(t)}, \theta^{(t)})]
+$$
+由于$\theta^{(t+1)}$使得$L(\theta, \theta^{(t)})$ 极大，所以:
+$$
+L(\theta^{(t+1)}, \theta^{(t)}) - L(\theta^{(t)}, \theta^{(t)}) \ge 0
+$$
+而:
+$$
+H(\theta^{(t+1)}, \theta^{(t)}) - H(\theta^{(t)}, \theta^{(t)}) \\
+= \sum_i\sum_{z_i}Q(z_i)^{(t)}log(P(\bold z_i|\bold x_i;\theta^{(t+1)}))
+  - \sum_i\sum_{z_i}Q(z_i)^{(t)}log(P(\bold z_i|\bold x_i;\theta^{(t)})) \\
+= \sum_i\sum_{z_i}Q(z_i)^{(t)}log(\frac{P(\bold z_i|\bold x_i;\theta^{(t+1)})}{P(\bold z_i|\bold x_i;\theta^{(t)})}) \\
+\le \sum_ilog(\sum_{z_i}Q(z_i)^{(t)}\frac{P(\bold z_i|\bold x_i;\theta^{(t+1)})}{P(\bold z_i|\bold x_i;\theta^{(t)})}) \\
+= \sum_ilog(\sum_{z_i}Q(z_i)^{(t)}\frac{P(\bold z_i|\bold x_i;\theta^{(t+1)})}{Q(z_i)^{(t)}}) \\ 
+= 0
+$$
+所以：
+$$
+[L(\theta^{(t+1)}, \theta^{(t)}) - L(\theta^{(t)}, \theta^{(t)})] - [H(\theta^{(t+1)}, \theta^{(t)}) - H(\theta^{(t)}, \theta^{(t)})] \ge 0
+$$
+所以EM算法会收敛。但是需要注意的是，并不保证收敛到全局的极大值点。
+
+
+
+### Kmeans算法的EM解释
