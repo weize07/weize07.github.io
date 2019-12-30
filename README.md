@@ -28,5 +28,7 @@
 
 [支持向量机](./statistical-learning/SVM.html)
 
+[EM算法和K-means](./statistical-learning/EM_Kmeans.html)
+
 [基于numpy的部分实现](https://github.com/weize07/statistical-learning-methods)
 

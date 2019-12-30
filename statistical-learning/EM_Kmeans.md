@@ -98,3 +98,46 @@ $$
 
 
 ### Kmeans算法的EM解释
+
+Kmeans算法是一个经典的无监督聚类算法，它的执行过程如下：
+
+1. 选择K个初始中心点$\{\bold u_1,\bold u_2,...,\bold u_K\}$
+2. 将每个数据点$\bold x_i \in D$ 划归到离它最近的中心点$ \bold u_k $所代表的类别
+3. 固定$\bold x_i$所属的分类，对每一个类别k，令其中心点$\bold u_k=\frac{1}{|D_k|}\sum_{i \in D_k}\bold x_i$
+4. 重复2、3步直至收敛
+
+
+
+翻译成EM版本：
+$$
+参数\theta:\{\bold u_1,\bold u_2,...,\bold u_K\}\\
+隐变量：z_i \in \{1,2,...,K\}\\
+联合概率分布： P(\bold x_i,z_i;\theta) \propto 
+\left\{
+\begin{aligned}
+-exp(||\bold x_i-\bold u_{z_i}||^2), ||\bold x_i-\bold u_{z_i}||^2 = min_{1 \le k \le K}||\bold x_i-\bold u_{k}||^2 \\
+0, ||\bold x_i-\bold u_{z_i}||^2 > min_{1 \le k \le K}||\bold x_i-\bold u_{k}||^2
+\end{aligned}
+\right. \\
+z_i的条件概率分布：P(z_i|\bold x_i;\theta) \propto 
+\left\{
+\begin{aligned}
+1, ||\bold x_i-\bold u_{z_i}||^2 = min_{1 \le k \le K}||\bold x_i-\bold u_{k}||^2 \\
+0, ||\bold x_i-\bold u_{z_i}||^2 > min_{1 \le k \le K}||\bold x_i-\bold u_{k}||^2
+\end{aligned}
+\right. \\
+$$
+
+1. 选定初始值$\theta^{(0)}$
+2. 计算$P(z_i|\bold x_i;\theta^{(t)})$, $\bold x_i$ 属于条件概率最大的分类k, 即 $z_i = argmin_{1 \le k \le K}||\bold x_i-\bold u_{k}||^2 $
+
+3. 固定$z_i$,  求解最优化问题
+   $$
+   \theta^{(t+1)}=\mathop{\arg\max}_{\theta}\sum_i\sum_{z_i}P(z_i|\bold x_i;\theta^{(t)})log(P(\bold x_i,\bold z_i;\theta)) \\
+   = \mathop{\arg\max}_{\theta}\sum_{k}\sum_{i, z_i=k}log(-exp(||\bold x_i-\bold u_{z_i}||^2))\\
+   \frac{\partial L}{\partial \bold u_k} = \frac {\partial\sum_{i, zi=k}log(-exp(||\bold x_i-\bold u_{k}||^2))}{\partial \bold u_k}\\
+   =\sum_{i,zi=k}2(\bold x_i-\bold u_k)\\
+   令\frac{\partial L}{\partial \bold u_k} = 0，得\bold u_k = \frac{1}{|D_k|}\sum_{i \in D_k}\bold x_i
+   $$
+
+4. 重复3、4步骤直至收敛
